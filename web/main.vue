@@ -66,6 +66,10 @@
                 <AppTest />
             </van-tab>
 
+            <van-tab title="Color 模块">
+                <ColorTest />
+            </van-tab>
+
             <van-tab title="关于">
                 <van-cell
                     value="运行环境"
@@ -94,13 +98,15 @@ import GlobalTest from './components/GlobalTest.vue';
 import AutomatorTest from './components/AutomatorTest.vue';
 import AutojsAppTest from './components/AutojsAppTest.vue';
 import AppTest from './components/AppTest.vue';
+import ColorTest from './components/ColorTest.vue';
 
 export default {
     components: {
         GlobalTest,
         AutomatorTest,
         AutojsAppTest,
-        AppTest
+        AppTest,
+        ColorTest
     },
     data() {
         return {

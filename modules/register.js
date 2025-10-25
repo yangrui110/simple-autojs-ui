@@ -7,6 +7,7 @@ var automatorModule = require('./automator.js');
 var floatyModule = require('./floaty.js');
 var autojsModule = require('./autojs.js');
 var appModule = require('./app.js');
+var colorModule = require('./color.js');
 
 module.exports = {
     /**
@@ -28,6 +29,9 @@ module.exports = {
 
         // 注册 app 模块
         appModule.register(jsBridge);
+
+        // 注册 color 模块
+        colorModule.register(jsBridge);
 
         // TODO: 后续添加更多模块
         // uiModule.register(jsBridge);
