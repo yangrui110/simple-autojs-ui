@@ -12,7 +12,8 @@
         'modules/automator.js',
         'modules/autojs.js',
         'modules/app.js',
-        'modules/color.js'
+        'modules/color.js',
+        'modules/image.js'
         // TODO: 后续添加更多模块
         // 'modules/ui.js',
         // 'modules/files.js'
@@ -70,11 +71,12 @@
         
         // 组合所有模块到 autojs 对象
         window.autojs = {
-            // global、automator、app 和 color 作为子模块
+            // global、automator、app、color 和 image 作为子模块
             global: window.__autojs_modules.global || {},
             automator: window.__autojs_modules.automator || {},
             app: window.__autojs_modules.app || {},
-            color: window.__autojs_modules.color || {}
+            color: window.__autojs_modules.color || {},
+            image: window.__autojs_modules.image || {}
             
             // 模块会自动添加，无需手动维护
         };

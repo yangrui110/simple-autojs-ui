@@ -8,6 +8,7 @@ var floatyModule = require('./floaty.js');
 var autojsModule = require('./autojs.js');
 var appModule = require('./app.js');
 var colorModule = require('./color.js');
+var imageModule = require('./image.js');
 
 module.exports = {
     /**
@@ -32,6 +33,9 @@ module.exports = {
 
         // 注册 color 模块
         colorModule.register(jsBridge);
+
+        // 注册 image 模块
+        imageModule.register(jsBridge);
 
         // TODO: 后续添加更多模块
         // uiModule.register(jsBridge);
