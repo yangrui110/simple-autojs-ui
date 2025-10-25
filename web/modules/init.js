@@ -10,11 +10,11 @@
     var moduleFiles = [
         'modules/global.js',
         'modules/automator.js',
-        'modules/autojs.js'
+        'modules/autojs.js',
+        'modules/app.js'
         // TODO: 后续添加更多模块
         // 'modules/ui.js',
-        // 'modules/files.js',
-        // 'modules/app.js'
+        // 'modules/files.js'
     ];
     
     /**
@@ -29,7 +29,7 @@
             script.src = url;
             
             script.onload = function() {
-                console.log('模块已加载: ' + url);
+                console.log('模块已加载1: ' + url);
                 resolve();
             };
             
@@ -69,9 +69,10 @@
         
         // 组合所有模块到 autojs 对象
         window.autojs = {
-            // global 和 automator 作为子模块
+            // global、automator 和 app 作为子模块
             global: window.__autojs_modules.global || {},
-            automator: window.__autojs_modules.automator || {}
+            automator: window.__autojs_modules.automator || {},
+            app: window.__autojs_modules.app || {}
             
             // 模块会自动添加，无需手动维护
         };
