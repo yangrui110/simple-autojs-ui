@@ -15,6 +15,14 @@ Simple AutoJS UI 是一个为 AutoJS6 设计的 UI 开发框架，它通过 WebV
 - **完整的 API 封装**：涵盖 AutoJS6 的主要功能模块
 - **开发友好**：提供测试界面，便于快速调试各个模块功能
 
+## 界面预览
+
+<div align="center">
+  <img src="img/1.png" width="200" alt="主界面" />
+  <img src="img/2.png" width="200" alt="模块测试" />
+  <img src="img/3.png" width="200" alt="功能演示" />
+  <img src="img/4.png" width="200" alt="详细信息" />
+</div>
 
 ## 快速开始
 
@@ -241,38 +249,6 @@ export default {
 </script>
 ```
 
-## 项目结构
-
-```
-simple-autojs-ui/
-├── main.js                     # 主入口文件
-├── modules/                    # AutoJS 原生端模块
-│   ├── register.js            # 模块注册器
-│   ├── global.js              # 全局函数模块
-│   ├── automator.js           # 自动化操作模块
-│   ├── http.js                # HTTP 请求模块
-│   ├── device.js              # 设备信息模块
-│   ├── files.js               # 文件操作模块
-│   ├── storages.js            # 本地存储模块
-│   ├── base64.js              # Base64 编解码模块
-│   └── ...                    # 其他模块
-├── floaty-manager/            # 悬浮窗管理器
-│   └── floaty-ui-manager.js
-├── web/                       # Web 界面
-│   ├── index.html            # HTML 入口
-│   ├── main.vue              # Vue 主组件
-│   ├── modules/              # Web 端模块封装
-│   │   ├── init.js          # 模块加载器（重要！）
-│   │   ├── global.js        # 全局模块 Web 端封装
-│   │   ├── http.js          # HTTP 模块 Web 端封装
-│   │   └── ...              # 其他模块
-│   └── components/           # Vue 测试组件
-│       ├── GlobalTest.vue
-│       ├── HttpTest.vue
-│       └── ...
-└── project.json              # AutoJS 项目配置
-```
-
 ## 模块架构说明
 
 ### 通信流程
@@ -297,16 +273,6 @@ window.autojs = {
     // ... 其他模块
 }
 ```
-
-## 开发指南
-
-### 添加新模块
-
-1. 在 `modules/` 创建原生端模块，实现 jsBridge handlers
-2. 在 `web/modules/` 创建 Web 端封装，调用 jsBridge
-3. 在 `modules/register.js` 注册新模块
-4. 在 `web/modules/init.js` 添加模块加载配置
-5. （可选）在 `web/components/` 创建测试组件
 
 ### 调试技巧
 
