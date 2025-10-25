@@ -50,6 +50,18 @@
                 <van-button type="info" @click="testMovingText" style="margin: 8px;">移动文字示例</van-button>
             </van-row>
         </van-cell-group>
+        
+        <van-cell-group title="HTML/Vue 悬浮窗">
+            <van-row type="flex" justify="center">
+                <van-button type="success" @click="testHtmlFloaty" style="margin: 8px;">HTML 悬浮窗</van-button>
+            </van-row>
+            <van-row type="flex" justify="center">
+                <van-button type="success" @click="testVueFloaty" style="margin: 8px;">Vue 悬浮窗</van-button>
+            </van-row>
+            <van-row type="flex" justify="center">
+                <van-button type="success" @click="testUrlFloaty" style="margin: 8px;">URL 悬浮窗</van-button>
+            </van-row>
+        </van-cell-group>
     </div>
 </template>
 
@@ -336,6 +348,124 @@ export default {
                 
             } catch (err) {
                 autojs.global.toastLog('移动文字失败: ' + err);
+            }
+        },
+        
+        // ==================== HTML/Vue 悬浮窗示例 ====================
+        
+        // 测试 HTML 悬浮窗
+        async testHtmlFloaty() {
+            try {
+                autojs.global.toastLog('正在创建 HTML 悬浮窗...');
+                
+                // 使用数组 join 方法避免 Vue SFC 解析器对 script 标签的误解析
+                const htmlContent = [
+                    '<!DOCTYPE html>',
+                    '<html>',
+                    '<head>',
+                    '<meta charset="UTF-8">',
+                    '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+                    '<style>',
+                    'body { margin: 0; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }',
+                    'h1 { margin: 0 0 10px 0; font-size: 24px; }',
+                    'p { margin: 5px 0; font-size: 14px; opacity: 0.9; }',
+                    '.time { font-size: 32px; font-weight: bold; margin: 20px 0; }',
+                    'button { background: rgba(255,255,255,0.2); border: 2px solid white; color: white; padding: 10px 20px; border-radius: 20px; font-size: 16px; cursor: pointer; margin-top: 10px; }',
+                    '</' + 'style>',  // 分割避免被识别
+                    '</' + 'head>',
+                    '<body>',
+                    '<h1>🎨 HTML 悬浮窗</h1>',
+                    '<p>这是一个使用 HTML 创建的悬浮窗</p>',
+                    '<div class="time" id="time">00:00:00</div>',
+                    '<button onclick="alert(\'你好，AutoJS!\')">点击我</button>',
+                    '<' + 'script>',  // 分割避免被 Vue 解析器误解析
+                    'function updateTime() {',
+                    '  const now = new Date();',
+                    '  const time = now.toLocaleTimeString("zh-CN");',
+                    '  document.getElementById("time").textContent = time;',
+                    '}',
+                    'setInterval(updateTime, 1000);',
+                    'updateTime();',
+                    '</' + 'script>',  // 分割避免被识别为脚本结束标签
+                    '</' + 'body>',
+                    '</' + 'html>'
+                ].join('');
+                
+                this.currentWindow = await autojs.floaty.window(htmlContent, {
+                    type: 'html',
+                    width: '350',
+                    height: '500'
+                });
+                
+                autojs.global.toastLog('HTML 悬浮窗创建成功！');
+                
+                // 设置初始位置
+                await this.currentWindow.setPosition(50, 100);
+                
+            } catch (err) {
+                autojs.global.toastLog('创建 HTML 悬浮窗失败: ' + err);
+            }
+        },
+        
+        // 测试 Vue 悬浮窗
+        async testVueFloaty() {
+            try {
+                autojs.global.toastLog('正在创建 Vue 悬浮窗...');
+                
+                const vueTemplate = '<div style="padding: 20px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; text-align: center;">' +
+                    '<h2>⚡ Vue 悬浮窗</h2>' +
+                    '<p>计数器: {{ count }}</p>' +
+                    '<button @click="increment" style="margin: 10px; padding: 10px 20px; background: white; color: #f5576c; border: none; border-radius: 20px; cursor: pointer;">' +
+                    '点击 +1' +
+                    '</button>' +
+                    '<button @click="decrement" style="margin: 10px; padding: 10px 20px; background: white; color: #f5576c; border: none; border-radius: 20px; cursor: pointer;">' +
+                    '点击 -1' +
+                    '</button>' +
+                    '<p style="margin-top: 20px; font-size: 12px;">{{ message }}</p>' +
+                    '</div>';
+                
+                const vueScript = 'data() { return { count: 0, message: "这是一个 Vue 组件悬浮窗" } }, ' +
+                    'methods: { increment() { this.count++; }, decrement() { this.count--; } }';
+                
+                this.currentWindow = await autojs.floaty.window(vueTemplate, {
+                    type: 'vue',
+                    vueScript: vueScript,
+                    width: '350',
+                    height: '450'
+                });
+                
+                autojs.global.toastLog('Vue 悬浮窗创建成功！');
+                
+                // 设置初始位置
+                await this.currentWindow.setPosition(50, 100);
+                
+            } catch (err) {
+                autojs.global.toastLog('创建 Vue 悬浮窗失败: ' + err);
+            }
+        },
+        
+        // 测试 URL 悬浮窗
+        async testUrlFloaty() {
+            try {
+                autojs.global.toastLog('正在创建 URL 悬浮窗...');
+                
+                // 可以加载任何网页
+                const url = 'https://www.baidu.com';
+                
+                this.currentWindow = await autojs.floaty.window(url, {
+                    type: 'html', // URL 也使用 html 类型
+                    url: url,
+                    width: '400',
+                    height: '600'
+                });
+                
+                autojs.global.toastLog('URL 悬浮窗创建成功！');
+                
+                // 设置初始位置
+                await this.currentWindow.setPosition(30, 80);
+                
+            } catch (err) {
+                autojs.global.toastLog('创建 URL 悬浮窗失败: ' + err);
             }
         }
     }

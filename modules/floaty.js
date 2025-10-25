@@ -14,12 +14,77 @@ module.exports = {
         
         // ==================== 创建悬浮窗 ====================
         
-        // 创建带调整功能的悬浮窗
-        jsBridge.handle('floaty.window', function(event, layout) {
+        // 创建带调整功能的悬浮窗（支持 XML/HTML/URL）
+        jsBridge.handle('floaty.window', function(event, layout, options) {
             try {
-                // 注意: 这里需要根据实际情况处理 XML 布局
-                // 由于 layout 是字符串形式的 XML, 可能需要特殊处理
-                var window = floaty.window(layout);
+                options = options || {};
+                var window;
+                
+                // 判断是否为 HTML 内容或 URL
+                if (options.type === 'html' || (typeof layout === 'string' && (layout.trim().toLowerCase().startsWith('<!doctype') || layout.trim().toLowerCase().startsWith('<html')))) {
+                    // 创建包含 WebView 的悬浮窗
+                    window = floaty.window(
+                        <webview id="webview" w={options.width || '300'} h={options.height || '400'}/>
+                    );
+                    
+                    // 延迟加载 HTML 内容
+                    setTimeout(function() {
+                        try {
+                            var webview = window.webview;
+                            if (webview) {
+                                // 启用 JavaScript
+                                webview.getSettings().setJavaScriptEnabled(true);
+                                webview.getSettings().setDomStorageEnabled(true);
+                                
+                                // 加载 HTML 内容
+                                if (options.url || (layout.startsWith('http://') || layout.startsWith('https://'))) {
+                                    // 加载 URL
+                                    webview.loadUrl(options.url || layout);
+                                } else {
+                                    // 加载 HTML 字符串
+                                    webview.loadDataWithBaseURL(null, layout, 'text/html', 'UTF-8', null);
+                                }
+                                
+                                console.log('WebView 悬浮窗加载成功');
+                            }
+                        } catch (webError) {
+                            console.error('加载 WebView 内容失败:', webError);
+                        }
+                    }, 100);
+                    
+                } else if (options.type === 'vue' || options.vueComponent) {
+                    // 创建包含 Vue 组件的悬浮窗
+                    // 需要构建完整的 HTML 页面
+                    var vueHtml = buildVueFloatyPage(layout, options);
+                    
+                    window = floaty.window(
+                        <webview id="webview" w={options.width || '300'} h={options.height || '400'}/>
+                    );
+                    
+                    setTimeout(function() {
+                        try {
+                            var webview = window.webview;
+                            if (webview) {
+                                webview.getSettings().setJavaScriptEnabled(true);
+                                webview.getSettings().setDomStorageEnabled(true);
+                                webview.loadDataWithBaseURL(null, vueHtml, 'text/html', 'UTF-8', null);
+                                console.log('Vue 悬浮窗加载成功');
+                            }
+                        } catch (webError) {
+                            console.error('加载 Vue 内容失败:', webError);
+                        }
+                    }, 100);
+                    
+                } else {
+                    // 传统的 XML 布局（使用 JSX）
+                    // 这里直接传递字符串可能不行，需要动态执行
+                    try {
+                        window = floaty.window(eval('(' + layout + ')'));
+                    } catch (evalError) {
+                        console.error('XML 布局解析失败:', evalError);
+                        throw new Error('不支持的布局格式');
+                    }
+                }
                 
                 // 生成唯一ID并存储实例
                 var instanceId = 'floaty_' + (++instanceCounter);
@@ -32,10 +97,90 @@ module.exports = {
             }
         });
         
-        // 创建原始悬浮窗
-        jsBridge.handle('floaty.rawWindow', function(event, layout) {
+        // 构建 Vue 悬浮窗页面
+        function buildVueFloatyPage(vueContent, options) {
+            var html = '<!DOCTYPE html><html><head>' +
+                '<meta charset="UTF-8">' +
+                '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+                '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>' +
+                (options.vantUrl ? '<link rel="stylesheet" href="' + options.vantUrl + '">' : '') +
+                (options.vantJs ? '<script src="' + options.vantJs + '"></script>' : '') +
+                '<style>body { margin: 0; padding: 0; } ' + (options.css || '') + '</style>' +
+                '</head><body>' +
+                '<div id="app">' + vueContent + '</div>' +
+                '<script>' +
+                'const { createApp } = Vue;' +
+                'createApp({' +
+                (options.vueScript || '') +
+                '}).mount("#app");' +
+                '</script>' +
+                '</body></html>';
+            return html;
+        }
+        
+        // 创建原始悬浮窗（支持 XML/HTML/URL）
+        jsBridge.handle('floaty.rawWindow', function(event, layout, options) {
             try {
-                var window = floaty.rawWindow(layout);
+                options = options || {};
+                var window;
+                
+                // 判断是否为 HTML 内容或 URL
+                if (options.type === 'html' || (typeof layout === 'string' && (layout.trim().toLowerCase().startsWith('<!doctype') || layout.trim().toLowerCase().startsWith('<html')))) {
+                    // 创建包含 WebView 的原始悬浮窗
+                    window = floaty.rawWindow(
+                        <webview id="webview" w="*" h="*"/>
+                    );
+                    
+                    setTimeout(function() {
+                        try {
+                            var webview = window.webview;
+                            if (webview) {
+                                webview.getSettings().setJavaScriptEnabled(true);
+                                webview.getSettings().setDomStorageEnabled(true);
+                                
+                                if (options.url || (layout.startsWith('http://') || layout.startsWith('https://'))) {
+                                    webview.loadUrl(options.url || layout);
+                                } else {
+                                    webview.loadDataWithBaseURL(null, layout, 'text/html', 'UTF-8', null);
+                                }
+                                
+                                console.log('WebView 原始悬浮窗加载成功');
+                            }
+                        } catch (webError) {
+                            console.error('加载 WebView 内容失败:', webError);
+                        }
+                    }, 100);
+                    
+                } else if (options.type === 'vue' || options.vueComponent) {
+                    var vueHtml = buildVueFloatyPage(layout, options);
+                    
+                    window = floaty.rawWindow(
+                        <webview id="webview" w="*" h="*"/>
+                    );
+                    
+                    setTimeout(function() {
+                        try {
+                            var webview = window.webview;
+                            if (webview) {
+                                webview.getSettings().setJavaScriptEnabled(true);
+                                webview.getSettings().setDomStorageEnabled(true);
+                                webview.loadDataWithBaseURL(null, vueHtml, 'text/html', 'UTF-8', null);
+                                console.log('Vue 原始悬浮窗加载成功');
+                            }
+                        } catch (webError) {
+                            console.error('加载 Vue 内容失败:', webError);
+                        }
+                    }, 100);
+                    
+                } else {
+                    // 传统的 XML 布局
+                    try {
+                        window = floaty.rawWindow(eval('(' + layout + ')'));
+                    } catch (evalError) {
+                        console.error('XML 布局解析失败:', evalError);
+                        throw new Error('不支持的布局格式');
+                    }
+                }
                 
                 // 生成唯一ID并存储实例
                 var instanceId = 'floaty_raw_' + (++instanceCounter);

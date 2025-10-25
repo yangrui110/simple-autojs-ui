@@ -115,12 +115,19 @@
     // Floaty 模块定义
     var floatyModule = {
         /**
-         * 创建带调整功能的悬浮窗
-         * @param {string} layout - XML 布局字符串
+         * 创建带调整功能的悬浮窗（支持 XML/HTML/Vue）
+         * @param {string} layout - XML 布局字符串、HTML 内容或 URL
+         * @param {Object} options - 可选配置
+         * @param {string} options.type - 类型: 'xml'(默认), 'html', 'vue', 'url'
+         * @param {string} options.width - WebView 宽度（仅 HTML/Vue 模式）
+         * @param {string} options.height - WebView 高度（仅 HTML/Vue 模式）
+         * @param {string} options.url - URL 地址（type='url' 时使用）
+         * @param {string} options.vueScript - Vue 组件脚本（type='vue' 时使用）
+         * @param {string} options.css - 自定义样式
          * @returns {Promise<FloatyWindow>}
          */
-        window: function(layout) {
-            return $autojs.invoke('floaty.window', layout).then(function(instanceId) {
+        window: function(layout, options) {
+            return $autojs.invoke('floaty.window', layout, options).then(function(instanceId) {
                 if (!instanceId) {
                     throw new Error('创建悬浮窗失败');
                 }
@@ -129,12 +136,13 @@
         },
         
         /**
-         * 创建原始悬浮窗
-         * @param {string} layout - XML 布局字符串
+         * 创建原始悬浮窗（支持 XML/HTML/Vue）
+         * @param {string} layout - XML 布局字符串、HTML 内容或 URL
+         * @param {Object} options - 可选配置
          * @returns {Promise<FloatyRawWindow>}
          */
-        rawWindow: function(layout) {
-            return $autojs.invoke('floaty.rawWindow', layout).then(function(instanceId) {
+        rawWindow: function(layout, options) {
+            return $autojs.invoke('floaty.rawWindow', layout, options).then(function(instanceId) {
                 if (!instanceId) {
                     throw new Error('创建原始悬浮窗失败');
                 }
