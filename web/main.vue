@@ -74,6 +74,34 @@
                 <ImageTest />
             </van-tab>
 
+            <van-tab title="OCR 模块">
+                <OcrTest />
+            </van-tab>
+
+            <van-tab title="Keys 模块">
+                <KeysTest />
+            </van-tab>
+
+            <van-tab title="Device 模块">
+                <DeviceTest />
+            </van-tab>
+
+            <van-tab title="Storages 模块">
+                <StoragesTest />
+            </van-tab>
+
+            <van-tab title="Files 模块">
+                <FilesTest />
+            </van-tab>
+
+            <van-tab title="Engines 模块">
+                <EnginesTest />
+            </van-tab>
+
+            <van-tab title="Notice 模块">
+                <NoticeTest />
+            </van-tab>
+
             <van-tab title="关于">
                 <van-cell
                     value="运行环境"
@@ -104,6 +132,13 @@ import AutojsAppTest from './components/AutojsAppTest.vue';
 import AppTest from './components/AppTest.vue';
 import ColorTest from './components/ColorTest.vue';
 import ImageTest from './components/ImageTest.vue';
+import OcrTest from './components/OcrTest.vue';
+import KeysTest from './components/KeysTest.vue';
+import DeviceTest from './components/DeviceTest.vue';
+import StoragesTest from './components/StoragesTest.vue';
+import FilesTest from './components/FilesTest.vue';
+import EnginesTest from './components/EnginesTest.vue';
+import NoticeTest from './components/NoticeTest.vue';
 
 export default {
     components: {
@@ -112,7 +147,14 @@ export default {
         AutojsAppTest,
         AppTest,
         ColorTest,
-        ImageTest
+        ImageTest,
+        OcrTest,
+        KeysTest,
+        DeviceTest,
+        StoragesTest,
+        FilesTest,
+        EnginesTest,
+        NoticeTest
     },
     data() {
         return {

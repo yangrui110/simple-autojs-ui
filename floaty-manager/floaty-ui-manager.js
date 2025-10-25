@@ -2,7 +2,7 @@
  * Floaty 模块 - 悬浮窗管理
  */
 
-var logger = require('./utils.js').logger;
+var logger = require('../modules/utils.js').logger;
 
 // 悬浮窗管理器
 var floatyManager = {
