@@ -3,52 +3,7 @@
         <van-nav-bar title="AutoJS6 UI 测试"/>
 
         <van-tabs v-model="activeTab">
-            <van-tab title="配置">
-                <van-cell-group title="权限">
-                    <van-cell title="无障碍服务" label="用于脚本自动操作 (点击/长按/滑动等)">
-                        <van-switch
-                            v-model="accessibilityServiceEnabled"
-                            @input="onAccessibilityServiceCheckChanged"
-                        />
-                    </van-cell>
-                </van-cell-group>
-                <van-cell-group title="配置">
-                    <van-cell title="开关样本">
-                        <van-switch
-                            v-model="sampleSwitchChecked"
-                            @change="onSampleSwitchChanged"
-                        />
-                    </van-cell>
-                    <van-field v-model="greeting"
-                               label="问候语"
-                               placeholder="请输入问候语"
-                               maxLength="20"
-                               input-align="right"
-                    />
-                    <van-field v-model.number="count"
-                               label="运行次数"
-                               placeholder="请输入运行次数"
-                               maxLength="4"
-                               inputmode="numeric"
-                               input-align="right"
-                    />
-                    <van-field
-                        label="选择文件"
-                        :value="selectedFilePath"
-                        placeholder="选择一个文件"
-                        readonly
-                        clickable
-                        @click.native="selectFile"
-                        input-align="right"
-                    />
-                </van-cell-group>
-                <van-cell-group title="操作">
-                    <van-cell title="查看日志" is-link @click="showLog"/>
-                    <van-row type="flex" justify="center">
-                        <van-button type="primary" @click="run" style="margin: 8px;">运行</van-button>
-                    </van-row>
-                </van-cell-group>
-            </van-tab>
+
 
             <van-tab title="Global 模块">
                 <GlobalTest />
@@ -184,11 +139,7 @@ export default {
         return {
             accessibilityServiceEnabled: false,
             activeTab: 0,
-            sampleSwitchChecked: true,
-            greeting: 'Hello',
-            count: 192,
             appVersionName: '',
-            selectedFilePath: '',
         };
     },
     created() {
@@ -203,9 +154,6 @@ export default {
         onAccessibilityServiceCheckChanged(checked) {
             $autojs.invoke('set-accessibility-enabled', checked);
         },
-        onSampleSwitchChanged(checked) {
-            $autojs.invoke('toast-log', `样本开关已${checked ? '开启' : '关闭'}`);
-        },
         showLog() {
             $autojs.invoke('show-log');
         },
@@ -214,14 +162,6 @@ export default {
         },
         openVueWebsite() {
             $autojs.send('open-url', 'https://cn.vuejs.org/');
-        },
-        run() {
-            $autojs.invoke('toast-log', `greeting: "${this.greeting}"\ncount: ${this.count}`);
-        },
-        selectFile() {
-            $autojs.invoke('select-file', '*/*').then((path) => {
-                this.selectedFilePath = path || '';
-            });
         },
         showDeviceInfoDialog() {
             $autojs.invoke('show-device-info-dialog');
