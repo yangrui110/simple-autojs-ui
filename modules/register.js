@@ -5,6 +5,7 @@
 var globalModule = require('./global.js');
 var automatorModule = require('./automator.js');
 var floatyModule = require('./floaty.js');
+var autojsModule = require('./autojs.js');
 
 module.exports = {
     /**
@@ -20,6 +21,9 @@ module.exports = {
 
         // 注册 floaty 模块
         floatyModule.register(jsBridge);
+        
+        // 注册 autojs 本体应用模块
+        autojsModule.register(jsBridge);
 
         // TODO: 后续添加更多模块
         // uiModule.register(jsBridge);

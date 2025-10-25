@@ -1,6 +1,6 @@
 <template>
     <van-row>
-        <van-nav-bar title="基于 Vue 的界面"/>
+        <van-nav-bar title="AutoJS6 UI 测试"/>
 
         <van-tabs v-model="activeTab">
             <van-tab title="配置">
@@ -42,54 +42,24 @@
                         input-align="right"
                     />
                 </van-cell-group>
-            </van-tab>
-
-            <van-tab title="运行">
-                <van-cell title="查看日志" is-link @click="showLog"/>
-                <van-cell-group title="基础方法测试">
+                <van-cell-group title="操作">
+                    <van-cell title="查看日志" is-link @click="showLog"/>
                     <van-row type="flex" justify="center">
                         <van-button type="primary" @click="run" style="margin: 8px;">运行</van-button>
                     </van-row>
-                    <van-row type="flex" justify="center">
-                        <van-button type="info" @click="testSleep" style="margin: 8px;">测试 sleep (2秒)</van-button>
-                    </van-row>
-                    <van-row type="flex" justify="center">
-                        <van-button type="warning" @click="testToast" style="margin: 8px;">测试 toast</van-button>
-                    </van-row>
-                    <van-row type="flex" justify="center">
-                        <van-button @click="testToastLog" style="margin: 8px;">测试 toastLog</van-button>
-                    </van-row>
-                    <van-row type="flex" justify="center">
-                        <van-button @click="testRandom" style="margin: 8px;">测试 random</van-button>
-                    </van-row>
                 </van-cell-group>
-                <van-cell-group title="系统信息测试">
-                    <van-row type="flex" justify="center">
-                        <van-button @click="testCurrentInfo" style="margin: 8px;">获取当前包名/Activity</van-button>
-                    </van-row>
-                    <van-row type="flex" justify="center">
-                        <van-button @click="testClipboard" style="margin: 8px;">测试剪贴板</van-button>
-                    </van-row>
-                    <van-row type="flex" justify="center">
-                        <van-button @click="testScreenSize" style="margin: 8px;">获取屏幕尺寸</van-button>
-                    </van-row>
-                </van-cell-group>
-                <van-cell-group title="类型判断测试">
-                    <van-row type="flex" justify="center">
-                        <van-button @click="testSpecies" style="margin: 8px;">测试 species</van-button>
-                    </van-row>
-                </van-cell-group>
-                <van-cell-group title="自动化测试">
-                    <van-row type="flex" justify="center">
-                        <van-button type="primary" @click="testClick" style="margin: 8px;">测试点击坐标</van-button>
-                    </van-row>
-                    <van-row type="flex" justify="center">
-                        <van-button @click="testClickText" style="margin: 8px;">测试点击文本</van-button>
-                    </van-row>
-                    <van-row type="flex" justify="center">
-                        <van-button @click="testAutoWaitFor" style="margin: 8px;">启用无障碍服务</van-button>
-                    </van-row>
-                </van-cell-group>
+            </van-tab>
+
+            <van-tab title="Global 模块">
+                <GlobalTest />
+            </van-tab>
+
+            <van-tab title="Automator 模块">
+                <AutomatorTest />
+            </van-tab>
+
+            <van-tab title="本体应用 API">
+                <AutojsAppTest />
             </van-tab>
 
             <van-tab title="关于">
@@ -116,7 +86,16 @@
     </van-row>
 </template>
 <script>
+import GlobalTest from './components/GlobalTest.vue';
+import AutomatorTest from './components/AutomatorTest.vue';
+import AutojsAppTest from './components/AutojsAppTest.vue';
+
 export default {
+    components: {
+        GlobalTest,
+        AutomatorTest,
+        AutojsAppTest
+    },
     data() {
         return {
             accessibilityServiceEnabled: false,
@@ -162,96 +141,6 @@ export default {
         },
         showDeviceInfoDialog() {
             $autojs.invoke('show-device-info-dialog');
-        },
-        // 测试 autojs.global.sleep() 方法
-        async testSleep() {
-            $autojs.invoke('toast-log', '开始测试 sleep...');
-            const startTime = Date.now();
-            
-            // 使用新的 autojs.global.sleep() 方法
-            await autojs.global.sleep(2000);
-            
-            const elapsed = Date.now() - startTime;
-            $autojs.invoke('toast-log', `sleep 完成！实际耗时: ${elapsed}ms`);
-        },
-        // 测试 autojs.global.toast() 方法
-        testToast() {
-            autojs.global.toast('Hello from autojs.global.toast()! 🎉');
-        },
-        // 测试 toastLog
-        testToastLog() {
-            autojs.global.toastLog('这是一条 toastLog 消息，同时会打印到日志');
-        },
-        // 测试 random
-        async testRandom() {
-            const randomValue1 = await autojs.global.random();
-            const randomValue2 = await autojs.global.random(1, 100);
-            autojs.global.toastLog(`随机数:\n无参: ${randomValue1.toFixed(4)}\n[1-100]: ${randomValue2}`);
-        },
-        // 测试获取当前包名和Activity
-        async testCurrentInfo() {
-            const pkg = await autojs.global.currentPackage();
-            const act = await autojs.global.currentActivity();
-            autojs.global.toastLog(`当前包名: ${pkg}\n当前Activity: ${act}`);
-        },
-        // 测试剪贴板
-        async testClipboard() {
-            await autojs.global.setClip('测试剪贴板内容 - AutoJS6');
-            const clipContent = await autojs.global.getClip();
-            autojs.global.toastLog(`剪贴板内容: ${clipContent}`);
-        },
-        // 测试屏幕尺寸
-        async testScreenSize() {
-            const width = await autojs.global.WIDTH;
-            const height = await autojs.global.HEIGHT;
-            autojs.global.toastLog(`屏幕尺寸:\n宽度: ${width}px\n高度: ${height}px`);
-        },
-        // 测试 species 类型判断
-        async testSpecies() {
-            const testData = [
-                { value: 'hello', label: '字符串' },
-                { value: 123, label: '数字' },
-                { value: true, label: '布尔值' },
-                { value: [1, 2, 3], label: '数组' },
-                { value: { a: 1 }, label: '对象' },
-            ];
-            
-            let result = '类型判断测试:\n';
-            for (const item of testData) {
-                const type = await autojs.global.species(item.value);
-                result += `${item.label}: ${type}\n`;
-            }
-            
-            autojs.global.toastLog(result);
-        },
-        // ==================== Automator 测试方法 ====================
-        // 测试点击坐标
-        async testClick() {
-            autojs.global.toastLog('将在 2 秒后点击屏幕中心位置');
-            await autojs.global.sleep(2000);
-            
-            const width = await autojs.global.WIDTH;
-            const height = await autojs.global.HEIGHT;
-            const centerX = width / 2;
-            const centerY = height / 2;
-            
-            const success = await autojs.automator.click(centerX, centerY);
-            autojs.global.toastLog(`点击${success ? '成功' : '失败'}: (${centerX}, ${centerY})`);
-        },
-        // 测试点击文本
-        async testClickText() {
-            autojs.global.toastLog('尝试点击"关于"文本...');
-            const success = await autojs.automator.clickText('关于');
-            autojs.global.toastLog(`点击文本${success ? '成功' : '失败'}`);
-        },
-        // 测试启用无障碍服务
-        testAutoWaitFor() {
-            autojs.global.toastLog('正在检查无障碍服务...');
-            autojs.automator.auto.waitFor().then(() => {
-                autojs.global.toastLog('无障碍服务已启动');
-            }).catch((err) => {
-                autojs.global.toastLog('无障碍服务启动失败: ' + err);
-            });
         },
     },
 };

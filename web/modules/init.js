@@ -9,7 +9,8 @@
     // 模块配置列表
     var moduleFiles = [
         'modules/global.js',
-        'modules/automator.js'
+        'modules/automator.js',
+        'modules/autojs.js'
         // TODO: 后续添加更多模块
         // 'modules/ui.js',
         // 'modules/files.js',
@@ -63,13 +64,24 @@
             return;
         }
         
+        // 先从 autojs 模块中获取本体应用的方法
+        var autojsAppModule = window.__autojs_modules.autojs || {};
+        
         // 组合所有模块到 autojs 对象
         window.autojs = {
+            // global 和 automator 作为子模块
             global: window.__autojs_modules.global || {},
             automator: window.__autojs_modules.automator || {}
             
             // 模块会自动添加，无需手动维护
         };
+        
+        // 将 autojs 本体应用的方法直接挂载到 window.autojs 上
+        for (var key in autojsAppModule) {
+            if (autojsAppModule.hasOwnProperty(key)) {
+                window.autojs[key] = autojsAppModule[key];
+            }
+        }
         
         // 清理临时命名空间（可选）
         // delete window.__autojs_modules;
