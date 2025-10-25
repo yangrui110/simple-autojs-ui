@@ -73,26 +73,6 @@
                 <NoticeTest />
             </van-tab>
 
-            <van-tab title="关于">
-                <van-cell
-                    value="运行环境"
-                    :title="appVersionName ? `AutoJs6 ${appVersionName}` : `AutoJs6`"
-                    label="WebView + Android"
-                    @click="showDeviceInfoDialog"
-                />
-                <van-cell
-                    title="Vue.js 2.6"
-                    label="渐进式 JavaScript 框架"
-                    is-link
-                    @click="openVueWebsite"
-                />
-                <van-cell
-                    title="Vant 2.12"
-                    label="轻量, 可靠的移动端 Vue 组件库"
-                    is-link
-                    @click="openVantWebsite"
-                />
-            </van-tab>
         </van-tabs>
     </van-row>
 </template>
@@ -143,29 +123,10 @@ export default {
         };
     },
     created() {
-        $autojs.invoke('get-accessibility-enabled').then((value) => {
-            this.accessibilityServiceEnabled = value;
-        });
-        $autojs.invoke('get-app-version-name').then((value) => {
-            this.appVersionName = value;
-        });
+
     },
     methods: {
-        onAccessibilityServiceCheckChanged(checked) {
-            $autojs.invoke('set-accessibility-enabled', checked);
-        },
-        showLog() {
-            $autojs.invoke('show-log');
-        },
-        openVantWebsite() {
-            $autojs.send('open-url', 'https://vant-ui.github.io/vant/v2/#/zh-CN/');
-        },
-        openVueWebsite() {
-            $autojs.send('open-url', 'https://cn.vuejs.org/');
-        },
-        showDeviceInfoDialog() {
-            $autojs.invoke('show-device-info-dialog');
-        },
+
     },
 };
 </script>

@@ -10,8 +10,6 @@ ui.layout(
 
 ui.statusBarColor('#ffffff');
 
-var FILE_REQ_CODE = 11525;
-var fileChooserResolve = null;
 var web = ui['web'];
 
 
@@ -81,3 +79,8 @@ setTimeout(function() {
 web.events.on('console_message', (event, msg) => {
     console.log(`${files.getName(msg.sourceId())}:${msg.lineNumber()}: ${msg.message()}`);
 });
+web.jsBridge
+    // 处理读取本地文件的请求
+    .handle('fetch', (event, args) => {
+        return files.read(files.join(files.path('web'), args.path));
+    })
