@@ -129,6 +129,43 @@ await autojs.automator.back(); // 返回键
 await autojs.automator.home(); // Home键
 ```
 
+#### 悬浮窗模块
+
+支持通过 WebView 创建 HTML 和 Vue 页面作为悬浮窗：
+
+```javascript
+// HTML 悬浮窗
+const htmlWindow = await autojs.floaty.window(htmlContent, {
+    type: 'html',
+    width: '350',
+    height: '500'
+});
+
+// Vue 悬浮窗
+const vueWindow = await autojs.floaty.window(vueTemplate, {
+    type: 'vue',
+    vueScript: vueScript,
+    width: '300',
+    height: '400'
+});
+
+// URL 悬浮窗
+const urlWindow = await autojs.floaty.window('https://example.com', {
+    url: 'https://example.com',
+    width: '400',
+    height: '600'
+});
+
+// 控制悬浮窗
+await htmlWindow.setPosition(100, 100);
+await htmlWindow.setSize(400, 300);
+await htmlWindow.setAdjustEnabled(false);
+await htmlWindow.close();
+await autojs.floaty.closeAll();
+```
+
+详细说明请参考 [Floaty 使用指南](docs/FLOATY_USAGE.md)
+
 #### 设备信息模块
 
 ```javascript
