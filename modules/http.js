@@ -24,8 +24,7 @@ module.exports = {
                     threads.start(function() {
                         try {
                             var response = http.get(url, options);
-                            var result = formatResponse(response);
-                            callback(result, null);
+                            callback(response, null);
                         } catch (err) {
                             callback(null, err.message || String(err));
                         }
@@ -33,8 +32,7 @@ module.exports = {
                     return null;
                 } else {
                     // 同步执行
-                    var response = http.get(url, options);
-                    return formatResponse(response);
+                    return http.get(url, options);
                 }
             } catch (err) {
                 console.error('HTTP GET 请求失败:', err);
@@ -62,8 +60,7 @@ module.exports = {
                     threads.start(function() {
                         try {
                             var response = http.post(url, data, options);
-                            var result = formatResponse(response);
-                            callback(result, null);
+                            callback(response, null);
                         } catch (err) {
                             callback(null, err.message || String(err));
                         }
@@ -71,8 +68,7 @@ module.exports = {
                     return null;
                 } else {
                     // 同步执行
-                    var response = http.post(url, data, options);
-                    return formatResponse(response);
+                    return http.post(url, data, options);
                 }
             } catch (err) {
                 console.error('HTTP POST 请求失败:', err);
@@ -100,8 +96,7 @@ module.exports = {
                     threads.start(function() {
                         try {
                             var response = http.postJson(url, data, options);
-                            var result = formatResponse(response);
-                            callback(result, null);
+                            callback(response, null);
                         } catch (err) {
                             callback(null, err.message || String(err));
                         }
@@ -109,8 +104,7 @@ module.exports = {
                     return null;
                 } else {
                     // 同步执行
-                    var response = http.postJson(url, data, options);
-                    return formatResponse(response);
+                    return http.postJson(url, data, options);
                 }
             } catch (err) {
                 console.error('HTTP POST JSON 请求失败:', err);
@@ -152,8 +146,7 @@ module.exports = {
                     threads.start(function() {
                         try {
                             var response = http.postMultipart(url, processedFiles, options);
-                            var result = formatResponse(response);
-                            callback(result, null);
+                            callback(response, null);
                         } catch (err) {
                             callback(null, err.message || String(err));
                         }
@@ -161,8 +154,7 @@ module.exports = {
                     return null;
                 } else {
                     // 同步执行
-                    var response = http.postMultipart(url, processedFiles, options);
-                    return formatResponse(response);
+                    return http.postMultipart(url, processedFiles, options);
                 }
             } catch (err) {
                 console.error('HTTP POST Multipart 请求失败:', err);
@@ -189,8 +181,7 @@ module.exports = {
                     threads.start(function() {
                         try {
                             var response = http.request(url, options);
-                            var result = formatResponse(response);
-                            callback(result, null);
+                            callback(response, null);
                         } catch (err) {
                             callback(null, err.message || String(err));
                         }
@@ -198,8 +189,7 @@ module.exports = {
                     return null;
                 } else {
                     // 同步执行
-                    var response = http.request(url, options);
-                    return formatResponse(response);
+                    return http.request(url, options);
                 }
             } catch (err) {
                 console.error('HTTP REQUEST 请求失败:', err);
@@ -209,58 +199,6 @@ module.exports = {
                 };
             }
         });
-        
-        /**
-         * 格式化 HTTP 响应对象
-         * @param {Object} response - HTTP 响应对象
-         * @returns {Object} 格式化后的响应对象
-         */
-        function formatResponse(response) {
-            try {
-                var result = {
-                    statusCode: response.statusCode,
-                    statusMessage: response.statusMessage,
-                    headers: {},
-                    body: null,
-                    contentType: null
-                };
-                
-                // 获取响应头
-                var headerNames = response.headers.names();
-                if (headerNames) {
-                    for (var i = 0; i < headerNames.length; i++) {
-                        var name = headerNames[i];
-                        result.headers[name] = response.headers.get(name);
-                    }
-                }
-                
-                // 获取 Content-Type
-                result.contentType = response.headers.get('Content-Type');
-                
-                // 获取响应体
-                if (response.body) {
-                    var bodyString = response.body.string();
-                    result.body = bodyString;
-                    
-                    // 尝试解析 JSON
-                    if (result.contentType && result.contentType.indexOf('application/json') !== -1) {
-                        try {
-                            result.bodyJson = JSON.parse(bodyString);
-                        } catch (e) {
-                            // JSON 解析失败，保持为字符串
-                        }
-                    }
-                }
-                
-                return result;
-            } catch (err) {
-                console.error('格式化响应失败:', err);
-                return {
-                    error: '格式化响应失败: ' + (err.message || String(err)),
-                    statusCode: -1
-                };
-            }
-        }
     }
 };
 
