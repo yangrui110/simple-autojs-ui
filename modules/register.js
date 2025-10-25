@@ -3,15 +3,19 @@
  */
 
 const globalModule = require('./global.js');
+const automatorModule = require('./automator.js');
 
 module.exports = {
     /**
      * 注册所有模块
      * @param {Object} jsBridge - WebView 的 jsBridge 对象
      */
-    registerAll(jsBridge) {
+    registerAll: function(jsBridge) {
         // 注册 global 模块
         globalModule.register(jsBridge);
+        
+        // 注册 automator 模块
+        automatorModule.register(jsBridge);
 
         // TODO: 后续添加更多模块
         // uiModule.register(jsBridge);

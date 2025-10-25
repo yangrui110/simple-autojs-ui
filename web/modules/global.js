@@ -13,48 +13,105 @@
     var globalModule = {
         // ==================== 基础方法 ====================
         
-        sleep: function(ms, millisMax, bounds) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.sleep', args[0], args[1], args[2]);
+        /**
+         * 休眠 - 支持 3 个重载 (最多 2 个参数):
+         * sleep(millis)
+         * sleep(millisMin, millisMax)
+         * sleep(millis, bounds)
+         */
+        sleep: function() {
+            var args = ['global.sleep'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
-        toast: function(text, isLong, isForcible) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.toast', args[0], args[1], args[2]);
+        /**
+         * 消息浮动框 - 支持 4 个重载:
+         * toast(text)
+         * toast(text, isLong)
+         * toast(text, isLong, isForcible)
+         * toast(text, isForcible)
+         */
+        toast: function() {
+            var args = ['global.toast'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
-        toastLog: function(text, isLong, isForcible) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.toastLog', args[0], args[1], args[2]);
+        /**
+         * 消息浮动框并打印 - 支持 4 个重载:
+         * toastLog(text)
+         * toastLog(text, isLong)
+         * toastLog(text, isLong, isForcible)
+         * toastLog(text, isForcible)
+         */
+        toastLog: function() {
+            var args = ['global.toastLog'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
-        random: function(min, max) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.random', args[0], args[1]);
+        /**
+         * 随机数 - 支持 2 个重载:
+         * random()
+         * random(min, max)
+         */
+        random: function() {
+            var args = ['global.random'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
         // ==================== 等待方法 ====================
         
-        wait: function(condition, limit, interval, callback) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.wait', args[0], args[1], args[2], args[3]);
+        /**
+         * 等待条件满足 - 支持 6 个重载:
+         * wait(condition)
+         * wait(condition, limit)
+         * wait(condition, limit, interval)
+         * wait(condition, callback)
+         * wait(condition, limit, callback)
+         * wait(condition, limit, interval, callback)
+         */
+        wait: function() {
+            var args = ['global.wait'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
-        waitForActivity: function(activityName, limit, interval, callback) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.waitForActivity', args[0], args[1], args[2], args[3]);
+        /**
+         * 等待 Activity 出现 - 支持 6 个重载:
+         * waitForActivity(activityName)
+         * waitForActivity(activityName, limit)
+         * waitForActivity(activityName, limit, interval)
+         * waitForActivity(activityName, callback)
+         * waitForActivity(activityName, limit, callback)
+         * waitForActivity(activityName, limit, interval, callback)
+         */
+        waitForActivity: function() {
+            var args = ['global.waitForActivity'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
-        waitForPackage: function(packageName, limit, interval, callback) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.waitForPackage', args[0], args[1], args[2], args[3]);
+        /**
+         * 等待 Package 出现 - 支持 6 个重载:
+         * waitForPackage(packageName)
+         * waitForPackage(packageName, limit)
+         * waitForPackage(packageName, limit, interval)
+         * waitForPackage(packageName, callback)
+         * waitForPackage(packageName, limit, callback)
+         * waitForPackage(packageName, limit, interval, callback)
+         */
+        waitForPackage: function() {
+            var args = ['global.waitForPackage'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
         // ==================== 脚本控制 ====================
         
-        exit: function(e) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.exit', args[0]);
+        /**
+         * 停止脚本运行 - 支持 2 个重载:
+         * exit()
+         * exit(e)
+         */
+        exit: function() {
+            var args = ['global.exit'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
         stop: function() {
@@ -123,44 +180,84 @@
             return $autojs.invoke('global.selector');
         },
         
-        pickup: function(selector, compass) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.pickup', args[0], args[1]);
+        /**
+         * 拾取选择器 - pickup(selector, compass)
+         */
+        pickup: function() {
+            var args = ['global.pickup'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
-        detect: function(selector, compass) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.detect', args[0], args[1]);
+        /**
+         * 控件探测 - detect(selector, compass)
+         */
+        detect: function() {
+            var args = ['global.detect'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
-        existsAll: function(selectors) {
-            return $autojs.invoke('global.existsAll', selectors);
+        /**
+         * 选择器全部存在 - existsAll(...selectors)
+         */
+        existsAll: function() {
+            var args = ['global.existsAll'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
-        existsOne: function(selectors) {
-            return $autojs.invoke('global.existsOne', selectors);
+        /**
+         * 选择器任一存在 - existsOne(...selectors)
+         */
+        existsOne: function() {
+            var args = ['global.existsOne'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
         // ==================== 坐标标度 ====================
         
-        cX: function(x, baseOrIsRatio) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.cX', args[0], args[1]);
+        /**
+         * 横坐标标度 - 支持 4 个重载 (最多 2 个参数):
+         * cX()
+         * cX(x, base)
+         * cX(x, isRatio)
+         * cX(x)
+         */
+        cX: function() {
+            var args = ['global.cX'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
-        cY: function(y, baseOrIsRatio) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.cY', args[0], args[1]);
+        /**
+         * 纵坐标标度 - 支持 4 个重载 (最多 2 个参数):
+         * cY()
+         * cY(y, base)
+         * cY(y, isRatio)
+         * cY(y)
+         */
+        cY: function() {
+            var args = ['global.cY'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
-        cYx: function(y, baseXOrRatio, isRatio) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.cYx', args[0], args[1], args[2]);
+        /**
+         * 以横坐标度量的纵坐标标度 - 支持 3 个重载 (最多 2 个参数):
+         * cYx(coordinateY, baseX) 或 cYx(percentY, ratio)
+         * cYx(y, isRatio)
+         * cYx(y)
+         */
+        cYx: function() {
+            var args = ['global.cYx'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
-        cXy: function(x, baseYOrRatio, isRatio) {
-            var args = Array.prototype.slice.call(arguments);
-            return $autojs.invoke('global.cXy', args[0], args[1], args[2]);
+        /**
+         * 以纵坐标度量的横坐标标度 - 支持 3 个重载 (最多 2 个参数):
+         * cXy(coordinateX, baseY) 或 cXy(percentX, ratio)
+         * cXy(x, isRatio)
+         * cXy(x)
+         */
+        cXy: function() {
+            var args = ['global.cXy'].concat(Array.prototype.slice.call(arguments));
+            return $autojs.invoke.apply($autojs, args);
         },
         
         // ==================== 类型判断 ====================

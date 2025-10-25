@@ -79,6 +79,17 @@
                         <van-button @click="testSpecies" style="margin: 8px;">测试 species</van-button>
                     </van-row>
                 </van-cell-group>
+                <van-cell-group title="自动化测试">
+                    <van-row type="flex" justify="center">
+                        <van-button type="primary" @click="testClick" style="margin: 8px;">测试点击坐标</van-button>
+                    </van-row>
+                    <van-row type="flex" justify="center">
+                        <van-button @click="testClickText" style="margin: 8px;">测试点击文本</van-button>
+                    </van-row>
+                    <van-row type="flex" justify="center">
+                        <van-button @click="testAutoWaitFor" style="margin: 8px;">启用无障碍服务</van-button>
+                    </van-row>
+                </van-cell-group>
             </van-tab>
 
             <van-tab title="关于">
@@ -212,6 +223,35 @@ export default {
             }
             
             autojs.global.toastLog(result);
+        },
+        // ==================== Automator 测试方法 ====================
+        // 测试点击坐标
+        async testClick() {
+            autojs.global.toastLog('将在 2 秒后点击屏幕中心位置');
+            await autojs.global.sleep(2000);
+            
+            const width = await autojs.global.WIDTH;
+            const height = await autojs.global.HEIGHT;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            const success = await autojs.automator.click(centerX, centerY);
+            autojs.global.toastLog(`点击${success ? '成功' : '失败'}: (${centerX}, ${centerY})`);
+        },
+        // 测试点击文本
+        async testClickText() {
+            autojs.global.toastLog('尝试点击"关于"文本...');
+            const success = await autojs.automator.clickText('关于');
+            autojs.global.toastLog(`点击文本${success ? '成功' : '失败'}`);
+        },
+        // 测试启用无障碍服务
+        testAutoWaitFor() {
+            autojs.global.toastLog('正在检查无障碍服务...');
+            autojs.automator.auto.waitFor().then(() => {
+                autojs.global.toastLog('无障碍服务已启动');
+            }).catch((err) => {
+                autojs.global.toastLog('无障碍服务启动失败: ' + err);
+            });
         },
     },
 };

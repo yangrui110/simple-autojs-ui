@@ -11,104 +11,55 @@ module.exports = {
         // ==================== 基础方法 ====================
         
         // 睡眠
-        jsBridge.handle('global.sleep', function(event, ms, millisMax, bounds) {
-            if (arguments.length === 2) {
-                return sleep(ms);
-            } else if (arguments.length === 3) {
-                return sleep(ms, millisMax);
-            } else if (arguments.length === 4) {
-                return sleep(ms, millisMax, bounds);
-            }
-            return sleep(ms);
+        jsBridge.handle('global.sleep', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return sleep.apply(null, args);
         });
 
         // 显示 Toast
-        jsBridge.handle('global.toast', function(event, text, isLong, isForcible) {
-            if (arguments.length === 2) {
-                return toast(text);
-            } else if (arguments.length === 3) {
-                return toast(text, isLong);
-            } else if (arguments.length === 4) {
-                return toast(text, isLong, isForcible);
-            }
-            return toast(text);
+        jsBridge.handle('global.toast', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return toast.apply(null, args);
         });
 
         // 显示 Toast 并打印日志
-        jsBridge.handle('global.toastLog', function(event, text, isLong, isForcible) {
-            if (arguments.length === 2) {
-                return toastLog(text);
-            } else if (arguments.length === 3) {
-                return toastLog(text, isLong);
-            } else if (arguments.length === 4) {
-                return toastLog(text, isLong, isForcible);
-            }
-            return toastLog(text);
+        jsBridge.handle('global.toastLog', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return toastLog.apply(null, args);
         });
 
         // 随机数
-        jsBridge.handle('global.random', function(event, min, max) {
-            if (arguments.length === 1) {
-                return random();
-            } else if (arguments.length === 3) {
-                return random(min, max);
-            }
-            return random();
+        jsBridge.handle('global.random', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return random.apply(null, args);
         });
 
         // ==================== 等待方法 ====================
         
         // 等待条件满足
-        jsBridge.handle('global.wait', function(event, condition, limit, interval, callback) {
-            if (arguments.length === 2) {
-                return wait(condition);
-            } else if (arguments.length === 3) {
-                return wait(condition, limit);
-            } else if (arguments.length === 4) {
-                return wait(condition, limit, interval);
-            } else if (arguments.length === 5) {
-                return wait(condition, limit, interval, callback);
-            }
-            return wait(condition);
+        jsBridge.handle('global.wait', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return wait.apply(null, args);
         });
 
         // 等待指定 Activity
-        jsBridge.handle('global.waitForActivity', function(event, activityName, limit, interval, callback) {
-            if (arguments.length === 2) {
-                return waitForActivity(activityName);
-            } else if (arguments.length === 3) {
-                return waitForActivity(activityName, limit);
-            } else if (arguments.length === 4) {
-                return waitForActivity(activityName, limit, interval);
-            } else if (arguments.length === 5) {
-                return waitForActivity(activityName, limit, interval, callback);
-            }
-            return waitForActivity(activityName);
+        jsBridge.handle('global.waitForActivity', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return waitForActivity.apply(null, args);
         });
 
         // 等待指定包名
-        jsBridge.handle('global.waitForPackage', function(event, packageName, limit, interval, callback) {
-            if (arguments.length === 2) {
-                return waitForPackage(packageName);
-            } else if (arguments.length === 3) {
-                return waitForPackage(packageName, limit);
-            } else if (arguments.length === 4) {
-                return waitForPackage(packageName, limit, interval);
-            } else if (arguments.length === 5) {
-                return waitForPackage(packageName, limit, interval, callback);
-            }
-            return waitForPackage(packageName);
+        jsBridge.handle('global.waitForPackage', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return waitForPackage.apply(null, args);
         });
 
         // ==================== 脚本控制 ====================
         
         // 退出脚本
-        jsBridge.handle('global.exit', function(event, e) {
-            if (arguments.length === 1) {
-                return exit();
-            } else {
-                return exit(e);
-            }
+        jsBridge.handle('global.exit', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return exit.apply(null, args);
         });
 
         // 停止脚本
@@ -139,25 +90,29 @@ module.exports = {
         // ==================== 版本要求 ====================
         
         // 要求最低 API 级别
-        jsBridge.handle('global.requiresApi', function(event, api) {
-            return requiresApi(api);
+        jsBridge.handle('global.requiresApi', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return requiresApi.apply(null, args);
         });
 
         // 要求最低 AutoJS 版本
-        jsBridge.handle('global.requiresAutojsVersion', function(event, version) {
-            return requiresAutojsVersion(version);
+        jsBridge.handle('global.requiresAutojsVersion', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return requiresAutojsVersion.apply(null, args);
         });
 
         // ==================== Java 互操作 ====================
         
         // 导入 Java 包
-        jsBridge.handle('global.importPackage', function(event, pkg) {
-            return importPackage(pkg);
+        jsBridge.handle('global.importPackage', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return importPackage.apply(null, args);
         });
 
         // 导入 Java 类
-        jsBridge.handle('global.importClass', function(event, cls) {
-            return importClass(cls);
+        jsBridge.handle('global.importClass', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return importClass.apply(null, args);
         });
 
         // ==================== 系统信息 ====================
@@ -175,8 +130,9 @@ module.exports = {
         // ==================== 剪贴板 ====================
         
         // 设置剪贴板内容
-        jsBridge.handle('global.setClip', function(event, text) {
-            return setClip(text);
+        jsBridge.handle('global.setClip', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return setClip.apply(null, args);
         });
 
         // 获取剪贴板内容
@@ -192,84 +148,61 @@ module.exports = {
         });
 
         // 拾取选择器
-        jsBridge.handle('global.pickup', function(event, selector, compass) {
-            if (arguments.length === 2) {
-                return pickup(selector);
-            } else {
-                return pickup(selector, compass);
-            }
+        jsBridge.handle('global.pickup', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return pickup.apply(null, args);
         });
 
         // 控件探测
-        jsBridge.handle('global.detect', function(event, selector, compass) {
-            if (arguments.length === 2) {
-                return detect(selector);
-            } else {
-                return detect(selector, compass);
-            }
+        jsBridge.handle('global.detect', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return detect.apply(null, args);
         });
 
         // 检查所有选择器是否存在
-        jsBridge.handle('global.existsAll', function(event, selectors) {
-            return existsAll(selectors);
+        jsBridge.handle('global.existsAll', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return existsAll.apply(null, args);
         });
 
         // 检查任一选择器是否存在
-        jsBridge.handle('global.existsOne', function(event, selectors) {
-            return existsOne(selectors);
+        jsBridge.handle('global.existsOne', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return existsOne.apply(null, args);
         });
 
         // ==================== 坐标标度 ====================
         
         // X 坐标标度
-        jsBridge.handle('global.cX', function(event, x, baseOrIsRatio) {
-            if (arguments.length === 1) {
-                return cX();
-            } else if (arguments.length === 2) {
-                return cX(x);
-            } else {
-                return cX(x, baseOrIsRatio);
-            }
+        jsBridge.handle('global.cX', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return cX.apply(null, args);
         });
 
         // Y 坐标标度
-        jsBridge.handle('global.cY', function(event, y, baseOrIsRatio) {
-            if (arguments.length === 1) {
-                return cY();
-            } else if (arguments.length === 2) {
-                return cY(y);
-            } else {
-                return cY(y, baseOrIsRatio);
-            }
+        jsBridge.handle('global.cY', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return cY.apply(null, args);
         });
 
         // 以 X 度量的 Y 坐标标度
-        jsBridge.handle('global.cYx', function(event, y, baseXOrRatio, isRatio) {
-            if (arguments.length === 2) {
-                return cYx(y);
-            } else if (arguments.length === 3) {
-                return cYx(y, baseXOrRatio);
-            } else {
-                return cYx(y, baseXOrRatio, isRatio);
-            }
+        jsBridge.handle('global.cYx', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return cYx.apply(null, args);
         });
 
         // 以 Y 度量的 X 坐标标度
-        jsBridge.handle('global.cXy', function(event, x, baseYOrRatio, isRatio) {
-            if (arguments.length === 2) {
-                return cXy(x);
-            } else if (arguments.length === 3) {
-                return cXy(x, baseYOrRatio);
-            } else {
-                return cXy(x, baseYOrRatio, isRatio);
-            }
+        jsBridge.handle('global.cXy', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return cXy.apply(null, args);
         });
 
         // ==================== 类型判断 ====================
         
         // 获取对象种类
-        jsBridge.handle('global.species', function(event, o) {
-            return species(o);
+        jsBridge.handle('global.species', function(event) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return species.apply(null, args);
         });
 
         // 类型判断方法

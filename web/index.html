@@ -8,12 +8,7 @@
 <script src="https://unpkg.com/vue3-sfc-loader@0.8.4/dist/vue2-sfc-loader.js"></script>
 <script src="https://unpkg.com/vant@2.12/lib/vant.min.js"></script>
 <script src="autojs://sdk/v1.js"></script>
-<!-- AutoJS 模块 - 按顺序加载 -->
-<script src="modules/global.js"></script>
-<!-- TODO: 后续添加更多模块 -->
-<!-- <script src="modules/ui.js"></script> -->
-<!-- <script src="modules/files.js"></script> -->
-<!-- AutoJS 模块初始化 - 必须最后加载 -->
+<!-- AutoJS 模块加载器 - 只需引入这一个文件 -->
 <script src="modules/init.js"></script>
 <script>
     let { loadModule, vueVersion } = window['vue2-sfc-loader'];

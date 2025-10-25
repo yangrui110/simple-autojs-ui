@@ -1,31 +1,94 @@
 /**
  * AutoJS 模块初始化
- * 将所有模块从 __autojs_modules 组合到 window.autojs
+ * 动态加载所有模块并初始化
  */
 
 (function(window) {
     'use strict';
     
-    // 确保所有模块都已加载
-    if (!window.__autojs_modules) {
-        console.error('AutoJS 模块未加载！请确保在此文件之前加载了所有模块文件。');
-        return;
+    // 模块配置列表
+    var moduleFiles = [
+        'modules/global.js',
+        'modules/automator.js'
+        // TODO: 后续添加更多模块
+        // 'modules/ui.js',
+        // 'modules/files.js',
+        // 'modules/app.js'
+    ];
+    
+    /**
+     * 动态加载脚本文件
+     * @param {string} url - 脚本路径
+     * @returns {Promise}
+     */
+    function loadScript(url) {
+        return new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+            
+            script.onload = function() {
+                console.log('模块已加载: ' + url);
+                resolve();
+            };
+            
+            script.onerror = function() {
+                console.error('模块加载失败: ' + url);
+                reject(new Error('Failed to load script: ' + url));
+            };
+            
+            document.head.appendChild(script);
+        });
     }
     
-    // 组合所有模块到 autojs 对象
-    window.autojs = {
-        global: window.__autojs_modules.global || {}
+    /**
+     * 按顺序加载所有模块
+     */
+    function loadAllModules() {
+        // 使用 reduce 来实现按顺序加载
+        return moduleFiles.reduce(function(promise, file) {
+            return promise.then(function() {
+                return loadScript(file);
+            });
+        }, Promise.resolve());
+    }
+    
+    /**
+     * 初始化 autojs 对象
+     */
+    function initAutoJS() {
+        // 确保所有模块都已加载
+        if (!window.__autojs_modules) {
+            console.error('AutoJS 模块未加载！');
+            return;
+        }
         
-        // TODO: 后续添加更多模块
-        // ui: window.__autojs_modules.ui || {},
-        // files: window.__autojs_modules.files || {},
-        // app: window.__autojs_modules.app || {},
-    };
+        // 组合所有模块到 autojs 对象
+        window.autojs = {
+            global: window.__autojs_modules.global || {},
+            automator: window.__autojs_modules.automator || {}
+            
+            // 模块会自动添加，无需手动维护
+        };
+        
+        // 清理临时命名空间（可选）
+        // delete window.__autojs_modules;
+        
+        console.log('AutoJS 模块初始化完成');
+        
+        // 触发自定义事件，通知模块加载完成
+        if (typeof Event === 'function') {
+            window.dispatchEvent(new Event('autojs-ready'));
+        }
+    }
     
-    // 清理临时命名空间（可选）
-    // delete window.__autojs_modules;
-    
-    console.log('AutoJS 模块初始化完成');
+    // 开始加载模块
+    loadAllModules()
+        .then(function() {
+            initAutoJS();
+        })
+        .catch(function(error) {
+            console.error('模块加载失败:', error);
+        });
     
 })(window);
-
