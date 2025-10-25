@@ -10,6 +10,7 @@
     var moduleFiles = [
         'modules/global.js',
         'modules/automator.js',
+        'modules/uiselector.js',
         'modules/autojs.js',
         'modules/app.js',
         'modules/color.js',
@@ -20,7 +21,10 @@
         'modules/storages.js',
         'modules/files.js',
         'modules/engines.js',
-        'modules/notice.js'
+        'modules/notice.js',
+        'modules/floaty.js',
+        'modules/http.js',
+        'modules/base64.js'
         // TODO: 后续添加更多模块
         // 'modules/ui.js'
     ];
@@ -77,9 +81,10 @@
         
         // 组合所有模块到 autojs 对象
         window.autojs = {
-            // global、automator、app、color、image、ocr、keys、device、storages 和 files 作为子模块
+            // global、automator、uiselector、app、color、image、ocr、keys、device、storages 和 files 作为子模块
             global: window.__autojs_modules.global || {},
             automator: window.__autojs_modules.automator || {},
+            uiselector: window.__autojs_modules.uiselector || {},
             app: window.__autojs_modules.app || {},
             color: window.__autojs_modules.color || {},
             image: window.__autojs_modules.image || {},
@@ -89,7 +94,10 @@
             storages: window.__autojs_modules.storages || {},
             files: window.__autojs_modules.files || {},
             engines: window.__autojs_modules.engines || {},
-            notice: window.__autojs_modules.notice || {}
+            notice: window.__autojs_modules.notice || {},
+            floaty: window.__autojs_modules.floaty || {},
+            http: window.__autojs_modules.http || {},
+            base64: window.__autojs_modules.base64 || {}
             
             // 模块会自动添加，无需手动维护
         };

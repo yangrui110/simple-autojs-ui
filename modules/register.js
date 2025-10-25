@@ -4,7 +4,8 @@
 
 var globalModule = require('./global.js');
 var automatorModule = require('./automator.js');
-var floatyModule = require('../floaty-manager/floaty-ui-manager.js');
+var floatyModule = require('./floaty.js');
+var floatyManagerModule = require('../floaty-manager/floaty-ui-manager.js');
 var autojsModule = require('./autojs.js');
 var appModule = require('./app.js');
 var colorModule = require('./color.js');
@@ -16,6 +17,9 @@ var storagesModule = require('./storages.js');
 var filesModule = require('./files.js');
 var enginesModule = require('./engines.js');
 var noticeModule = require('./notice.js');
+var httpModule = require('./http.js');
+var base64Module = require('./base64.js');
+var uiselectorModule = require('./uiselector.js');
 
 module.exports = {
     /**
@@ -31,6 +35,9 @@ module.exports = {
 
         // 注册 floaty 模块
         floatyModule.register(jsBridge);
+        
+        // 注册 floaty 管理器模块
+        floatyManagerModule.register(jsBridge);
         
         // 注册 autojs 本体应用模块
         autojsModule.register(jsBridge);
@@ -65,6 +72,15 @@ module.exports = {
         // 注册 notice 模块
         noticeModule.register(jsBridge);
 
+        // 注册 http 模块
+        httpModule.register(jsBridge);
+
+        // 注册 base64 模块
+        base64Module.register(jsBridge);
+
+        // 注册 uiselector 模块
+        uiselectorModule.register(jsBridge);
+
         // TODO: 后续添加更多模块
         // uiModule.register(jsBridge);
     },
@@ -73,7 +89,7 @@ module.exports = {
      * 获取 floaty 管理器（供 main.js 使用）
      */
     getFloatyManager: function() {
-        return floatyModule.floatyManager;
+        return floatyManagerModule.floatyManager;
     }
 };
 

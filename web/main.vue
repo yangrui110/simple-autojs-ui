@@ -58,6 +58,22 @@
                 <AutomatorTest />
             </van-tab>
 
+            <van-tab title="UiSelector 模块">
+                <UiSelectorTest />
+            </van-tab>
+
+            <van-tab title="Floaty 模块">
+                <FloatyTest />
+            </van-tab>
+
+            <van-tab title="HTTP 模块">
+                <HttpTest />
+            </van-tab>
+
+            <van-tab title="Base64 模块">
+                <Base64Test />
+            </van-tab>
+
             <van-tab title="本体应用 API">
                 <AutojsAppTest />
             </van-tab>
@@ -128,6 +144,10 @@
 <script>
 import GlobalTest from './components/GlobalTest.vue';
 import AutomatorTest from './components/AutomatorTest.vue';
+import UiSelectorTest from './components/UiSelectorTest.vue';
+import FloatyTest from './components/FloatyTest.vue';
+import HttpTest from './components/HttpTest.vue';
+import Base64Test from './components/Base64Test.vue';
 import AutojsAppTest from './components/AutojsAppTest.vue';
 import AppTest from './components/AppTest.vue';
 import ColorTest from './components/ColorTest.vue';
@@ -144,6 +164,10 @@ export default {
     components: {
         GlobalTest,
         AutomatorTest,
+        UiSelectorTest,
+        FloatyTest,
+        HttpTest,
+        Base64Test,
         AutojsAppTest,
         AppTest,
         ColorTest,
