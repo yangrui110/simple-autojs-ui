@@ -14,15 +14,37 @@ module.exports = {
         
         // ==================== 创建悬浮窗 ====================
         
-        // 创建带调整功能的悬浮窗（支持 XML/HTML/URL）
+        // 创建包含 WebView 的悬浮窗（仅支持 HTML/Vue）
         jsBridge.handle('floaty.window', function(event, layout, options) {
             try {
                 options = options || {};
                 var window;
                 
-                // 判断是否为 HTML 内容或 URL
-                if (options.type === 'html' || (typeof layout === 'string' && (layout.trim().toLowerCase().startsWith('<!doctype') || layout.trim().toLowerCase().startsWith('<html')))) {
-                    // 创建包含 WebView 的悬浮窗
+                // 判断是否为 Vue 组件
+                if (options.type === 'vue' || options.vueComponent) {
+                    // 创建包含 Vue 组件的悬浮窗
+                    var vueHtml = buildVueFloatyPage(layout, options);
+                    
+                    window = floaty.window(
+                        <webview id="webview" w={options.width || '300'} h={options.height || '400'}/>
+                    );
+                    
+                    setTimeout(function() {
+                        try {
+                            var webview = window.webview;
+                            if (webview) {
+                                webview.getSettings().setJavaScriptEnabled(true);
+                                webview.getSettings().setDomStorageEnabled(true);
+                                webview.loadDataWithBaseURL(null, vueHtml, 'text/html', 'UTF-8', null);
+                                console.log('Vue 悬浮窗加载成功');
+                            }
+                        } catch (webError) {
+                            console.error('加载 Vue 内容失败:', webError);
+                        }
+                    }, 100);
+                    
+                } else {
+                    // HTML 内容或 URL（默认）
                     window = floaty.window(
                         <webview id="webview" w={options.width || '300'} h={options.height || '400'}/>
                     );
@@ -51,39 +73,6 @@ module.exports = {
                             console.error('加载 WebView 内容失败:', webError);
                         }
                     }, 100);
-                    
-                } else if (options.type === 'vue' || options.vueComponent) {
-                    // 创建包含 Vue 组件的悬浮窗
-                    // 需要构建完整的 HTML 页面
-                    var vueHtml = buildVueFloatyPage(layout, options);
-                    
-                    window = floaty.window(
-                        <webview id="webview" w={options.width || '300'} h={options.height || '400'}/>
-                    );
-                    
-                    setTimeout(function() {
-                        try {
-                            var webview = window.webview;
-                            if (webview) {
-                                webview.getSettings().setJavaScriptEnabled(true);
-                                webview.getSettings().setDomStorageEnabled(true);
-                                webview.loadDataWithBaseURL(null, vueHtml, 'text/html', 'UTF-8', null);
-                                console.log('Vue 悬浮窗加载成功');
-                            }
-                        } catch (webError) {
-                            console.error('加载 Vue 内容失败:', webError);
-                        }
-                    }, 100);
-                    
-                } else {
-                    // 传统的 XML 布局（使用 JSX）
-                    // 这里直接传递字符串可能不行，需要动态执行
-                    try {
-                        window = floaty.window(eval('(' + layout + ')'));
-                    } catch (evalError) {
-                        console.error('XML 布局解析失败:', evalError);
-                        throw new Error('不支持的布局格式');
-                    }
                 }
                 
                 // 生成唯一ID并存储实例
@@ -117,81 +106,6 @@ module.exports = {
                 '</body></html>';
             return html;
         }
-        
-        // 创建原始悬浮窗（支持 XML/HTML/URL）
-        jsBridge.handle('floaty.rawWindow', function(event, layout, options) {
-            try {
-                options = options || {};
-                var window;
-                
-                // 判断是否为 HTML 内容或 URL
-                if (options.type === 'html' || (typeof layout === 'string' && (layout.trim().toLowerCase().startsWith('<!doctype') || layout.trim().toLowerCase().startsWith('<html')))) {
-                    // 创建包含 WebView 的原始悬浮窗
-                    window = floaty.rawWindow(
-                        <webview id="webview" w="*" h="*"/>
-                    );
-                    
-                    setTimeout(function() {
-                        try {
-                            var webview = window.webview;
-                            if (webview) {
-                                webview.getSettings().setJavaScriptEnabled(true);
-                                webview.getSettings().setDomStorageEnabled(true);
-                                
-                                if (options.url || (layout.startsWith('http://') || layout.startsWith('https://'))) {
-                                    webview.loadUrl(options.url || layout);
-                                } else {
-                                    webview.loadDataWithBaseURL(null, layout, 'text/html', 'UTF-8', null);
-                                }
-                                
-                                console.log('WebView 原始悬浮窗加载成功');
-                            }
-                        } catch (webError) {
-                            console.error('加载 WebView 内容失败:', webError);
-                        }
-                    }, 100);
-                    
-                } else if (options.type === 'vue' || options.vueComponent) {
-                    var vueHtml = buildVueFloatyPage(layout, options);
-                    
-                    window = floaty.rawWindow(
-                        <webview id="webview" w="*" h="*"/>
-                    );
-                    
-                    setTimeout(function() {
-                        try {
-                            var webview = window.webview;
-                            if (webview) {
-                                webview.getSettings().setJavaScriptEnabled(true);
-                                webview.getSettings().setDomStorageEnabled(true);
-                                webview.loadDataWithBaseURL(null, vueHtml, 'text/html', 'UTF-8', null);
-                                console.log('Vue 原始悬浮窗加载成功');
-                            }
-                        } catch (webError) {
-                            console.error('加载 Vue 内容失败:', webError);
-                        }
-                    }, 100);
-                    
-                } else {
-                    // 传统的 XML 布局
-                    try {
-                        window = floaty.rawWindow(eval('(' + layout + ')'));
-                    } catch (evalError) {
-                        console.error('XML 布局解析失败:', evalError);
-                        throw new Error('不支持的布局格式');
-                    }
-                }
-                
-                // 生成唯一ID并存储实例
-                var instanceId = 'floaty_raw_' + (++instanceCounter);
-                floatyInstances[instanceId] = window;
-                
-                return instanceId;
-            } catch (e) {
-                console.error('创建原始悬浮窗失败:', e);
-                return null;
-            }
-        });
         
         // 关闭所有悬浮窗
         jsBridge.handle('floaty.closeAll', function(event) {
@@ -350,23 +264,6 @@ module.exports = {
             }
         });
         
-        // ==================== FloatyRawWindow 特有方法 ====================
-        
-        // 设置是否可触摸
-        jsBridge.handle('floaty.setTouchable', function(event, instanceId, touchable) {
-            var window = floatyInstances[instanceId];
-            if (!window) {
-                console.error('悬浮窗实例不存在:', instanceId);
-                return false;
-            }
-            try {
-                window.setTouchable(touchable);
-                return true;
-            } catch (e) {
-                console.error('设置触摸属性失败:', e);
-                return false;
-            }
-        });
     }
 };
 

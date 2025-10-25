@@ -92,38 +92,20 @@
         return $autojs.invoke('floaty.exitOnClose', this.instanceId);
     };
     
-    /**
-     * FloatyRawWindow 类 - 封装原始悬浮窗实例操作
-     */
-    function FloatyRawWindow(instanceId) {
-        this.instanceId = instanceId;
-    }
-    
-    // FloatyRawWindow 继承 FloatyWindow 的所有方法
-    FloatyRawWindow.prototype = Object.create(FloatyWindow.prototype);
-    FloatyRawWindow.prototype.constructor = FloatyRawWindow;
-    
-    /**
-     * 设置悬浮窗是否可触摸
-     * @param {boolean} touchable - 是否可触摸
-     * @returns {Promise<boolean>}
-     */
-    FloatyRawWindow.prototype.setTouchable = function(touchable) {
-        return $autojs.invoke('floaty.setTouchable', this.instanceId, touchable);
-    };
-    
     // Floaty 模块定义
     var floatyModule = {
         /**
-         * 创建带调整功能的悬浮窗（支持 XML/HTML/Vue）
-         * @param {string} layout - XML 布局字符串、HTML 内容或 URL
+         * 创建包含 WebView 的悬浮窗（仅支持 HTML/Vue）
+         * @param {string} layout - HTML 内容或 URL
          * @param {Object} options - 可选配置
-         * @param {string} options.type - 类型: 'xml'(默认), 'html', 'vue', 'url'
-         * @param {string} options.width - WebView 宽度（仅 HTML/Vue 模式）
-         * @param {string} options.height - WebView 高度（仅 HTML/Vue 模式）
-         * @param {string} options.url - URL 地址（type='url' 时使用）
-         * @param {string} options.vueScript - Vue 组件脚本（type='vue' 时使用）
+         * @param {string} options.type - 类型: 'html'(默认), 'vue'
+         * @param {string} options.width - WebView 宽度，如 '300'
+         * @param {string} options.height - WebView 高度，如 '400'
+         * @param {string} options.url - URL 地址（加载网页时使用）
+         * @param {string} options.vueScript - Vue 组件脚本（type='vue' 时必需）
          * @param {string} options.css - 自定义样式
+         * @param {string} options.vantUrl - Vant UI CSS CDN 地址
+         * @param {string} options.vantJs - Vant UI JS CDN 地址
          * @returns {Promise<FloatyWindow>}
          */
         window: function(layout, options) {
@@ -132,21 +114,6 @@
                     throw new Error('创建悬浮窗失败');
                 }
                 return new FloatyWindow(instanceId);
-            });
-        },
-        
-        /**
-         * 创建原始悬浮窗（支持 XML/HTML/Vue）
-         * @param {string} layout - XML 布局字符串、HTML 内容或 URL
-         * @param {Object} options - 可选配置
-         * @returns {Promise<FloatyRawWindow>}
-         */
-        rawWindow: function(layout, options) {
-            return $autojs.invoke('floaty.rawWindow', layout, options).then(function(instanceId) {
-                if (!instanceId) {
-                    throw new Error('创建原始悬浮窗失败');
-                }
-                return new FloatyRawWindow(instanceId);
             });
         },
         
