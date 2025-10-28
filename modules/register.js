@@ -2,6 +2,7 @@
  * 模块注册器 - 统一注册所有模块的 handlers
  */
 
+var pluginUtils = require('./plugin-utils.js');
 var globalModule = require('./global.js');
 var automatorModule = require('./automator.js');
 var floatyModule = require('./floaty.js');
