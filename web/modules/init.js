@@ -36,21 +36,48 @@
      */
     function loadScript(url) {
         return new Promise(function(resolve, reject) {
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = url;
-            
-            script.onload = function() {
-                console.log('模块已加载1: ' + url);
-                resolve();
-            };
-            
-            script.onerror = function() {
-                console.error('模块加载失败: ' + url);
-                reject(new Error('Failed to load script: ' + url));
-            };
-            
-            document.head.appendChild(script);
+            // 检测是否在 AutoJS WebView 环境中（插件模式或开发模式）
+            if (typeof $autojs !== 'undefined') {
+                // 使用 jsBridge 加载脚本内容
+                $autojs.invoke('fetch', { path: url })
+                    .then(function(content) {
+                        if (!content) {
+                            throw new Error('Empty content for: ' + url);
+                        }
+                        
+                        try {
+                            // 使用 eval 执行脚本内容
+                            // 添加 sourceURL 以便调试
+                            eval(content + '\n//# sourceURL=' + url);
+                            console.log('模块已加载: ' + url);
+                            resolve();
+                        } catch (e) {
+                            console.error('模块执行失败: ' + url, e);
+                            reject(e);
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('模块加载失败: ' + url, error);
+                        reject(new Error('Failed to load script: ' + url));
+                    });
+            } else {
+                // 传统方式：创建 <script> 标签（用于浏览器调试）
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = url;
+                
+                script.onload = function() {
+                    console.log('模块已加载: ' + url);
+                    resolve();
+                };
+                
+                script.onerror = function() {
+                    console.error('模块加载失败: ' + url);
+                    reject(new Error('Failed to load script: ' + url));
+                };
+                
+                document.head.appendChild(script);
+            }
         });
     }
     
