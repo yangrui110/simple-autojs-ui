@@ -45,6 +45,17 @@ module.exports = {
     },
     
     /**
+     * @param {string} relativePath - 相对路径
+     * @returns {Image|null} 图片对象
+    */
+    readResourceAsImage: function(relativePath) {
+        let bytes = this.readBinaryResource(relativePath);
+        if (bytes) {
+            return images.fromBytes(bytes);
+        }
+        return null;
+    },
+    /**
      * 读取二进制资源（如图片、字体）
      * @param {string} relativePath - 相对路径
      * @returns {ByteArray|null} 字节数组
