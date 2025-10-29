@@ -35,9 +35,6 @@ module.exports = {
         // 注册 floaty 模块
         floatyModule.register(jsBridge);
         
-        // 注册 floaty 管理器模块
-        floatyManagerModule.register(jsBridge);
-        
         // 注册 autojs 本体应用模块
         autojsModule.register(jsBridge);
 
