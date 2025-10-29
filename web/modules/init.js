@@ -154,12 +154,12 @@
     
     /**
      * 加载所有模块
-     * @param {boolean} parallel - 是否并行加载，默认 true（并行加载更快）
+     * @param {boolean} parallel - 是否并行加载，默认 false（顺序加载更安全）
      */
     function loadAllModules(parallel) {
-        // 默认使用并行加载以提升速度
+        // 默认使用顺序加载以确保模块依赖关系正确
         if (parallel === undefined) {
-            parallel = true;
+            parallel = false;
         }
         
         return parallel ? loadAllModulesParallel() : loadAllModulesSequential();
@@ -226,8 +226,8 @@
     window.__hideLoading = hideLoading;
     
     // 开始加载模块
-    // 使用并行加载以提升加载速度（如果模块有依赖关系导致出错，可以改为 false 使用顺序加载）
-    loadAllModules(true)
+    // 使用顺序加载以确保模块依赖关系正确（如果需要更快速度，可以改为 true 使用并行加载）
+    loadAllModules(false)
         .then(function() {
             initAutoJS();
             // 不在这里隐藏加载动画，等 Vue 应用完全加载后再隐藏
