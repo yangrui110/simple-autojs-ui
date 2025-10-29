@@ -2,11 +2,9 @@
  * 模块注册器 - 统一注册所有模块的 handlers
  */
 
-var pluginUtils = require('./plugin-utils.js');
 var globalModule = require('./global.js');
 var automatorModule = require('./automator.js');
 var floatyModule = require('./floaty.js');
-var floatyManagerModule = require('../floaty-manager/floaty-ui-manager.js');
 var autojsModule = require('./autojs.js');
 var appModule = require('./app.js');
 var colorModule = require('./color.js');
@@ -86,11 +84,5 @@ module.exports = {
         // uiModule.register(jsBridge);
     },
 
-    /**
-     * 获取 floaty 管理器（供 main.js 使用）
-     */
-    getFloatyManager: function() {
-        return floatyManagerModule.floatyManager;
-    }
 };
 
