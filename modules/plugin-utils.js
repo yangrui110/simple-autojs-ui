@@ -214,6 +214,114 @@ module.exports = {
         }
         
         console.log('============================');
+    },
+    
+    /**
+     * 初始化 WebView（通用方法）
+     * @param {WebView} webview - WebView 对象
+     * @param {Object} moduleRegister - 模块注册器对象
+     * @param {string} htmlPath - HTML 文件路径（必填，如 'web/index.html'）
+     * @param {Object} options - 可选配置
+     * @param {boolean} options.enableConsoleLog - 是否启用控制台日志监听（默认 true）
+     */
+    initWebView: function(webview, moduleRegister, htmlPath, options) {
+        var self = this;
+        options = options || {};
+        var enableConsoleLog = options.enableConsoleLog !== false;
+        
+        // 1. 根据运行模式加载 WebView 内容
+        if (self.isPluginMode()) {
+            // 插件模式：从内存加载 HTML
+            console.log('[Plugin] 从内存加载 WebView 内容...');
+            var htmlContent = self.readTextResource(htmlPath);
+            if (htmlContent) {
+                // 读取 init.js 并内联到 HTML 中
+                // 因为 <script src> 标签不会触发 jsBridge fetch handler
+                var initJs = self.readTextResource('web/modules/init.js');
+                if (initJs) {
+                    // 替换 <script src="modules/init.js"></script> 为内联脚本
+                    htmlContent = htmlContent.replace(
+                        '<script src="modules/init.js"></script>',
+                        '<script>\n' + initJs + '\n</script>'
+                    );
+                    console.log('[Plugin] 已内联 init.js');
+                } else {
+                    console.warn('[Plugin] 无法读取 init.js，可能导致模块加载失败');
+                }
+                
+                // 使用 memory:// 作为 baseURL，这样相对路径会被解析为 memory://web/xxx
+                webview.loadDataWithBaseURL(
+                    'memory://web/',
+                    htmlContent,
+                    'text/html',
+                    'UTF-8',
+                    null
+                );
+                console.log('[Plugin] WebView 内容加载完成');
+            } else {
+                console.error('[Plugin] 无法读取 ' + htmlPath);
+                toast('插件加载失败：无法读取HTML内容');
+            }
+        } else {
+            // 开发模式：使用文件路径
+            console.log('[Dev] 使用文件路径加载 WebView...');
+            webview.loadUrl('file://' + files.path(htmlPath));
+        }
+        
+        // 2. 注册所有模块的 handlers
+        if (moduleRegister && moduleRegister.registerAll) {
+            moduleRegister.registerAll(webview.jsBridge);
+            console.log('[WebView] 模块 handlers 已注册');
+        }
+        
+        // 3. 监听 WebView 的控制台消息
+        if (enableConsoleLog) {
+            webview.events.on('console_message', function(event, msg) {
+                console.log(files.getName(msg.sourceId()) + ':' + msg.lineNumber() + ': ' + msg.message());
+            });
+            console.log('[WebView] 控制台消息监听已启用');
+        }
+        
+        // 4. 处理读取本地文件的请求（兼容插件和开发模式）
+        webview.jsBridge.handle('fetch', function(event, args) {
+            var requestPath = args.path;
+            console.log('[Fetch] 请求资源:', requestPath);
+            
+            // 移除前导斜杠（如果有）
+            if (requestPath.startsWith('/')) {
+                requestPath = requestPath.substring(1);
+            }
+            
+            // 构建完整的相对路径
+            var resourcePath = 'web/' + requestPath;
+            
+            // 检查是否为二进制文件（图片、字体等）
+            if (self.isBinaryFile(requestPath)) {
+                // 二进制文件：返回 Data URI
+                console.log('[Fetch] 处理二进制资源:', requestPath);
+                var dataUri = self.readResource(resourcePath, true);
+                if (dataUri) {
+                    console.log('[Fetch] 二进制资源加载成功 (Data URI)');
+                    return dataUri;
+                } else {
+                    console.error('[Fetch] 二进制资源加载失败:', requestPath);
+                    return null;
+                }
+            } else {
+                // 文本文件：直接返回内容
+                console.log('[Fetch] 处理文本资源:', requestPath);
+                var content = self.readTextResource(resourcePath);
+                if (content) {
+                    console.log('[Fetch] 文本资源加载成功 (' + content.length + ' 字符)');
+                    return content;
+                } else {
+                    console.error('[Fetch] 文本资源加载失败:', requestPath);
+                    return null;
+                }
+            }
+        });
+        
+        console.log('[WebView] 初始化完成');
     }
 };
 
